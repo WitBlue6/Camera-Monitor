@@ -18,7 +18,7 @@ def image_compare(img1, img2, threshold=100):
     else:
         return 1
 
-def camera_detact(capture, last_img=None):
+def camera_detect(capture, last_img=None):
     """
     检测一轮摄像机捕获有无变化
     :param last_img: 上一张图片
@@ -26,7 +26,10 @@ def camera_detact(capture, last_img=None):
     """
     res = 0
     ret, frame = capture.read()
-    img = np.array(frame[0])
+    try:
+        img = np.array(frame[0])
+    except TypeError as e:
+        raise TypeError('No Available Camera Found!') from e
     for i in range(args.noise):
         ret, frame = capture.read()
         img = np.array(frame[0])
@@ -53,9 +56,9 @@ def monitor(period=5):
     while True:
         print('\nBeginning Camera Capture...')
         if isinstance(img, np.ndarray):
-            img = camera_detact(capture, last_img=img)
+            img = camera_detect(capture, last_img=img)
         else:
-            img = camera_detact(capture)
+            img = camera_detect(capture)
         time.sleep(period)
 
 # 参数调整
