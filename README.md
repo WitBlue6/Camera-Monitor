@@ -6,7 +6,7 @@
 cd E:/the/path/you/download/
 ```
 ## 2.运行脚本  
-默认参数threshold=5, period=3, path=C:/Users/he/Desktop/camera
+默认参数threshold=6.5, period=3, path=C:/Users/he/Desktop/camera
 ```
 python monitor.py --threshold=5 --period=3 --path=C:/Users/he/Desktop/camera
 ```
