@@ -6,9 +6,9 @@
 cd E:/the/path/you/download/
 ```
 ## 2.运行脚本  
-默认参数threshold=6.5, period=3, path=C:/Users/he/Desktop/camera, noise=5
+默认参数threshold=28, period=3, path=C:/Users/he/Desktop/camera, noise=5
 ```
-python monitor.py --threshold=5 --period=3 --path=C:/Users/he/Desktop/camera --noise=7
+python monitor.py --threshold=30 --period=3 --path=C:/Users/he/Desktop/camera --noise=7
 ```
 ## 3.参数说明  
 threshold:摄像头捕获到的画面变化量阈值，阈值越小越敏感  
