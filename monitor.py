@@ -19,7 +19,7 @@ def image_compare(img1, img2, threshold=100):
         print(f'SUM={sum}  Found Change!')
         return True
 
-def camera_detact(capture, last_img=None):
+def camera_detect(capture, last_img=None):
     """
     检测一轮摄像机捕获有无变化
     :param last_img: 上一张图片
@@ -50,9 +50,9 @@ def monitor(period=5):
     while True:
         print('\nBeginning Camera Capture...')
         if isinstance(img, np.ndarray):
-            img = camera_detact(capture, last_img=img)
+            img = camera_detect(capture, last_img=img)
         else:
-            img = camera_detact(capture)
+            img = camera_detect(capture)
         time.sleep(period)
 
 # 参数调整
