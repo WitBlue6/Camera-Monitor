@@ -9,8 +9,8 @@ def image_compare(img1, img2, threshold=100):
     灰度图比较
     :return:若两图片无较大变化，返回false
     """
-    img1_arr = np.array((img1[0]-np.min(img1[0]))/(np.max(img1[0])-np.min(img1[0])))
-    img2_arr = np.array((img2[0]-np.min(img2[0]))/(np.max(img2[0])-np.min(img2[0])))
+    img1_arr = np.array(img1[0])/np.max(img1[0])
+    img2_arr = np.array(img2[0])/np.max(img2[0])
     sum = np.sum(np.abs(img1_arr - img2_arr))
     if sum < threshold:
         print(f'SUM={sum}  No Change Found!')
