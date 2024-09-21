@@ -6,7 +6,7 @@
 cd E:/the/path/you/download/
 ```
 ## 2.运行脚本  
-默认参数threshold=28, period=3, path=C:/Users/he/Desktop/camera, noise=5
+默认参数threshold=12, period=3, path=C:/Users/he/Desktop/camera, noise=5
 ```
 python monitor.py --threshold=30 --period=3 --path=C:/Users/he/Desktop/camera --noise=7
 ```
@@ -14,6 +14,6 @@ python monitor.py --threshold=30 --period=3 --path=C:/Users/he/Desktop/camera --
 threshold:摄像头捕获到的画面变化量阈值，阈值越小越敏感  
 period:摄像头捕获周期，单位秒  
 path:捕获图片保存路径  
-noise:每一次新捕获重复比较的次数，noise越大比较次数越多，抗干扰越强
+noise:时间平均处理图片的个数，noise越大平均的图片越多
 
 待改进：阈值动态实时调整
