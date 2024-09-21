@@ -4,6 +4,7 @@ import pandas as pd
 import time
 import argparse
 import os
+
 def image_compare(img1, img2, threshold=100):
     """
     RGB图比较
@@ -13,6 +14,7 @@ def image_compare(img1, img2, threshold=100):
     img1_arr = img1/255.0
     img2_arr = img2/255.0
     sum = np.sum(np.abs(img1_arr - img2_arr))
+    print(sum)
     if sum < threshold:
         return 0
     else:
@@ -26,10 +28,7 @@ def camera_detect(capture, last_img=None):
     """
     res = 0
     ret, frame = capture.read()
-    try:
-        img = np.array(frame[0])
-    except TypeError as e:
-        raise TypeError('No Available Camera Found!') from e
+    img = np.array(frame[0])
     for i in range(args.noise):
         ret, frame = capture.read()
         img = np.array(frame[0])
@@ -50,18 +49,25 @@ def monitor(period=5):
     :param period: 监视周期（秒）
     :return:
     """
-    capture = cv2.VideoCapture(0)
     img = 0
     print(f'Monitor Start!\nParams:\nThreshold={args.threshold}, Period={args.period}, Noise={args.noise}\nSave Path:{args.path}')
     while True:
+        capture = cv2.VideoCapture(0)
+        if not capture.isOpened():
+            print('Camera cannot be opened!')
+            exit(1)
         print('\nBeginning Camera Capture...')
         if isinstance(img, np.ndarray):
             img = camera_detect(capture, last_img=img)
         else:
             img = camera_detect(capture)
+        capture.release()
         time.sleep(period)
 
 # 参数调整
+window_size = 10
+guard_size = 5
+alpha = 3.7
 parser = argparse.ArgumentParser(description='manual to this script')
 parser.add_argument('--threshold', type=int, default=28)
 parser.add_argument('--period', type=int, default=3)
