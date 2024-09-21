@@ -11,14 +11,14 @@ def image_compare(img1, img2, threshold=100):
     :param img: 640x3 np.ndarray
     :return:若两图片无较大变化，返回false
     """
-    img1_arr = img1/255.0
-    img2_arr = img2/255.0
+    img1_arr = cv2.GaussianBlur(img1, (5, 5), 0) / 255.0
+    img2_arr = cv2.GaussianBlur(img2, (5, 5), 0) / 255.0
     sum = np.sum(np.abs(img1_arr - img2_arr))
-    print(sum)
+    print('Difference Score:'+str(sum))
     if sum < threshold:
-        return 0
+        return False
     else:
-        return 1
+        return True
 
 def camera_detect(capture, last_img=None):
     """
@@ -26,19 +26,20 @@ def camera_detect(capture, last_img=None):
     :param last_img: 上一张图片
     :return: 当前图片
     """
-    res = 0
-    ret, frame = capture.read()
-    img = np.array(frame[0])
-    for i in range(args.noise):
+    frames = []
+    for i in range(args.noise): # 时间平均处理
         ret, frame = capture.read()
-        img = np.array(frame[0])
-        if not isinstance(last_img, np.ndarray):
-            return img
-        res += image_compare(img, last_img, threshold=args.threshold)
-    if res >= args.noise // 2 + 1:
+        if ret:
+            frames.append(np.array(frame))
+    frame_avg = np.mean(frames, axis=0)
+    img = frame_avg[0]
+    if not isinstance(last_img, np.ndarray):
+        return img
+    res = image_compare(img, last_img, threshold=args.threshold)
+    if res:
         t = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime())  # 当前图片事件发生时间
         img_path = os.path.join(args.path, f'{t}.jpg')
-        cv2.imwrite(img_path, frame)
+        cv2.imwrite(img_path, frame_avg.astype('uint8'))
         print(f'Capture Writing at time:{t}')
         return img
     else:
@@ -54,7 +55,7 @@ def monitor(period=5):
     while True:
         capture = cv2.VideoCapture(0)
         if not capture.isOpened():
-            print('Camera cannot be opened!')
+            print('#############ERROR##############\nCamera Has Been Closed!')
             exit(1)
         print('\nBeginning Camera Capture...')
         if isinstance(img, np.ndarray):
@@ -65,11 +66,8 @@ def monitor(period=5):
         time.sleep(period)
 
 # 参数调整
-window_size = 10
-guard_size = 5
-alpha = 3.7
 parser = argparse.ArgumentParser(description='manual to this script')
-parser.add_argument('--threshold', type=int, default=28)
+parser.add_argument('--threshold', type=int, default=12)
 parser.add_argument('--period', type=int, default=3)
 parser.add_argument('--path', type=str, default='C:/Users/he/Desktop/camera')
 parser.add_argument('--noise', type=int, default=5)
